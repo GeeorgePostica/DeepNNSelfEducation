@@ -4,6 +4,8 @@ import numpy as np
 import argparse
 import os
 import time
+import matplotlib.mlab as mlab
+import matplotlib.pyplot as plt
 
 start = time.time()
 np.set_printoptions(precision=2)
@@ -30,10 +32,17 @@ if args.verbose:
         time.time() - start))
 
 
+def plot_bins(bins, color):
+    print(bins)
+    plt.hist(bins, bins=len(bins), color=color)
+    plt.title('L2 Histogram')
+    plt.imshow(plt.figure(plt.hist()))
+
+
 def show_distances(dlib_face_predictor_path, torch_nn_model_path, img_dim=96):
     """Continuously compute and show distances between webcam frames"""
 
-    cap = cv2.VideoCapture(0)
+    cap = cv2.VideoCapture(-1)
 
     # Set camera resolution
 
@@ -99,6 +108,7 @@ def show_distances(dlib_face_predictor_path, torch_nn_model_path, img_dim=96):
                     rep_last = rep_new
 
                 d = rep_new - rep_last
+                plot_bins(d, 'blue')
                 d = np.dot(d, d)
                 rep_last = rep_new
                 distances.append(d)
